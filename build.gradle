@@ -1,0 +1,104 @@
+plugins {
+	id 'groovy'
+	id 'org.springframework.boot' version '2.7.10-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'com.jfrog.bintray' version '1.8.5'
+	id 'jacoco'
+	id "org.liquibase.gradle" version "2.1.1"
+}
+
+group = 'com.gradle'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.codehaus.groovy:groovy'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation "org.liquibase:liquibase-core"
+	implementation "org.postgresql:postgresql"
+	implementation "org.springframework.boot:spring-boot-starter-jdbc"
+//	compile('org.liquibase:liquibase-core:4.0.0')
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+task hello{
+	doLast{
+		println 'kishore'
+	}
+}
+
+task groovyEx{
+	String name="espkishore"
+	name.each {println "n"}
+}
+
+task taskX{
+println "taskX"
+tasks.findAll {
+	task -> task.name.startsWith('lib')
+}
+}
+task lib1{
+	println 'lib1'
+}
+task lib2{
+	println 'lib2'
+}
+task taskY(dependsOn:'taskX'){
+	println "taskY"
+}
+//task count {
+//	doLast {
+//		def n=10
+//		n.times{
+//			println "kishore"
+//		}
+//	}}
+
+task initialize{
+	doFirst {
+		println "this is initialization task"
+	}
+}
+def changeLog = "$projectDir/src/main/db/changelog.xml"
+
+
+tasks.whenTaskAdded { task ->
+	task.ext.srcDir = 'src/main/java'
+}
+tasks.register('copyReport', Copy) {
+	from layout.buildDirectory.file("reports/IncomeTax_Computation_ADUPXXXXXH-EPPA SAI PRASANNA KISHORE-3122-2022.pdf")
+	into layout.buildDirectory.dir("toArchive")
+}
+tasks.register('a')
+println tasks.getByPath('hello').path
+
+println "source dir is $a.srcDir"
+
+logger.quiet('An info log message which is always logged.')
+//logger.error('An error log message.')
+logger.warn('A warning log message.')
+logger.lifecycle('A lifecycle info log message.')
+logger.info('An info log message.')
+logger.debug('A debug log message.')
+logger.trace('A trace log message.') // Gradle never logs TRACE level logs
+
+test {
+	finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+}
+

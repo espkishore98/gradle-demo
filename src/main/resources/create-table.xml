@@ -1,0 +1,56 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+<changeSet author="ESPK" id="jira-ticket-01">
+    <createTable tableName="user_new">
+        <column name="id" type="int">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="guid" type="varchar(50)">
+        </column>
+        <column name="firstname" type="varchar(100)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="middlename" type="varchar(100)"></column>
+        <column name="lastname" type="varchar(100)"></column>
+        <column name="email" type="varchar(100)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="companyid" type="int"></column>
+        <column name="roleid" type="int"></column>
+    </createTable>
+    <createTable tableName="company">
+        <column name="id" type="int">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="guid" type="varchar(50)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="name" type="varchar(50)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="type" type="varchar(10)"></column>
+    </createTable>
+    <createTable tableName="role_new">
+        <column name="id" type="int">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="role_name" type="varchar(20)">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addForeignKeyConstraint baseTableName="user_new" baseColumnNames="companyid"
+                             constraintName="company_fk" referencedTableName="company"
+                             referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="user_new" baseColumnNames="roleid"
+                             constraintName="role_fk" referencedTableName="role_new"
+                             referencedColumnNames="id"/>
+    <rollback>
+        <dropTable tableName="user_new"/>
+        <dropTable tableName="role_new"/>
+    </rollback>
+</changeSet>
+
+</databaseChangeLog>
