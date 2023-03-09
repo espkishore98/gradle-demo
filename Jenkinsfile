@@ -25,7 +25,7 @@ pipeline {
                 // If Maven was able to run the tests, even if some of the test
                 // failed, record the test results and archive the jar file.
                 always {
-                    emailext body :'Summary of your pipeline, Success !!!!', subject : 'PipelineStatus', to: 'espkishore@gmail.com'
+                    emailtext body :'Summary of your pipeline, Success !!!!', subject : 'PipelineStatus', to: 'espkishore@gmail.com'
                 }
         }
 }
